@@ -9,13 +9,11 @@ public class PostResponseDto {
     private final String userName;
     private final String title;
     private final String content;
-    private final String password;
 
     public PostResponseDto(Post post) {
         this.id =post.getId();
         this.userName =post.getUserName();
         this.title =post.getTitle();
         this.content =post.getContent();
-        this.password =post.getPassword();
     }
 }
