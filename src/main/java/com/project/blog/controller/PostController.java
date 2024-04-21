@@ -31,4 +31,18 @@ public class PostController {
     public PostResponseDto getPost(@PathVariable Long id) {
         return postService.getPost(id);
     }
+
+    // post 수정
+    @PutMapping("/post/{id}")
+    public PostResponseDto updatePost(@PathVariable Long id, @RequestBody PostRequestDto postRequestDto) {
+        return postService.updatePost(id, postRequestDto);
+    }
+
+    // post 삭제
+    @DeleteMapping("/post/{id}")
+    public PostResponseDto deletePost(@PathVariable Long id, @RequestBody PostRequestDto postRequestDto) {
+        postService.deletePost(id, postRequestDto);
+
+        return new PostResponseDto(true);
+    }
 }

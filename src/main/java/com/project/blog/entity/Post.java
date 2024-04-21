@@ -35,6 +35,11 @@ public class Post extends Timestamped {
         this.userName = postRequestPost.getUserName();
         this.title = postRequestPost.getTitle();
         this.content = postRequestPost.getContent();
-        this.password = postRequestPost.getPassword();
+    }
+
+    public void checkPassword(String inputPassword) {
+        if(!password.equals(inputPassword)) {
+            throw new IllegalArgumentException("비밀번호가 일치하지 않습니다.");
+        }
     }
 }
