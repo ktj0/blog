@@ -1,4 +1,4 @@
-$(document).on('click', '#admin-check', (e) -> {
+$(document).on('click', '#admin-check', function() {
     const isAdmin = $('#admin-check').prop('checked');
     const adminToken = $('#admin-token');
 

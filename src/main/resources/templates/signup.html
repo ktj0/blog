@@ -7,9 +7,11 @@
     <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
 
     <!-- jquery -->
-    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://code.jquery.com/jquery-3.7.0.min.js"
+            integrity="sha256-2Pmvv0kuTBOenSvLm6bvfBSSHrUJ+3A7x6P5Ebd07/g=" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/js-cookie@3.0.5/dist/js.cookie.min.js"></script>
 
-    <scrip src="/js/signup.js"></scrip>
+    <script src="/js/signup.js"></script>
 
     <title>Title</title>
 </head>
@@ -18,7 +20,7 @@
     <form action="/api/user/signup" method="post">
         <div>
             <div>username</div>
-            <input type="text" name="" placeholder="username">
+            <input type="text" name="username" placeholder="username">
 
             <div>password</div>
             <input type="password" name="password" placeholder="password">
@@ -28,7 +30,7 @@
             
             <div>
                 <input id="admin-check" type="checkbox" name="admin">관리자
-                <input id="admin-token" type="password" name="adminToken" placeholder="관리자 암호">
+                <input id="admin-token" type="password" name="adminToken" placeholder="관리자 암호" style="display:none">
             </div>
 
             <button id="signup-submit">회원가입</button>

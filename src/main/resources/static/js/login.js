@@ -1,12 +1,12 @@
 const host = 'http://' + window.location.host;
 
-$(document).ready(() -> {
+$(document).ready(function () {
     Cookies.remove('Authorization', {path: '/'});
 })
 
-$(document).on('click', 'login-btn', (e) -> {
-    const username = $('username').val();
-    const password = $('password').val();
+$(document).on('click', '#login-btn', function () {
+    const username = $('#username').val();
+    const password = $('#password').val();
 
     const data = {
         username,
@@ -15,11 +15,11 @@ $(document).on('click', 'login-btn', (e) -> {
 
     axios
         .post('/api/user/login', data, {
-            header: {
+            headers: {
                 'Content-Type': 'application/json'
             }
         })
-        .then((response) -> {
+        .then(function (response) {
             const token = response.headers.authorization;
 
             Cookies.set('Authorization', token, {path: '/'});
@@ -28,9 +28,13 @@ $(document).on('click', 'login-btn', (e) -> {
 
             window.location.href = host;
         })
-        .catch((error) -> {
+        .catch(function (response) {
             alert("Login Fail");
 
             window.location.href = '${host}/api/user/login-page';
         })
 })
+
+$(document).on('click', '#signup-btn', function() {
+    window.location.href = '/api/user/signup';
+});
