@@ -46,12 +46,13 @@ public class PostService {
                                       PostRequestDto postRequestDto,
                                       UserDetailsImpl userDetails) {
         Post post = findPost(id);
+        String username = userDetails.getUsername();
 
-        if (!post.getUsername().equals(userDetails.getUsername())) {
+        if (!post.getUsername().equals(username)) {
             throw new IllegalArgumentException("수정 권한이 존재하지 않습니다.");
         }
 
-        post.update(postRequestDto, userDetails);
+        post.update(postRequestDto, username);
 
         return new PostResponseDto(post);
     }
