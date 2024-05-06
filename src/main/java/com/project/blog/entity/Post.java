@@ -1,6 +1,7 @@
 package com.project.blog.entity;
 
 import com.project.blog.dto.PostRequestDto;
+import com.project.blog.security.UserDetailsImpl;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -15,31 +16,22 @@ public class Post extends Timestamped {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-    @Column(name = "userName", nullable = false)
-    private String userName;
+    @Column(name = "username", nullable = false)
+    private String username;
     @Column(name = "title", nullable = false)
     private String title;
     @Column(name = "content", nullable = false)
     private String content;
-    @Column(name = "password", nullable = false)
-    private String password;
 
-    public Post(PostRequestDto postRequestPost) {
-        this.userName = postRequestPost.getUserName();
-        this.title = postRequestPost.getTitle();
-        this.content = postRequestPost.getContent();
-        this.password = postRequestPost.getPassword();
-    }
-
-    public void update(PostRequestDto postRequestPost) {
-        this.userName = postRequestPost.getUserName();
+    public Post(PostRequestDto postRequestPost, UserDetailsImpl userDetails) {
+        this.username = userDetails.getUsername();
         this.title = postRequestPost.getTitle();
         this.content = postRequestPost.getContent();
     }
 
-    public void checkPassword(String inputPassword) {
-        if(!password.equals(inputPassword)) {
-            throw new IllegalArgumentException("비밀번호가 일치하지 않습니다.");
-        }
+    public void update(PostRequestDto postRequestPost, UserDetailsImpl userDetails) {
+        this.username = userDetails.getUsername();
+        this.title = postRequestPost.getTitle();
+        this.content = postRequestPost.getContent();
     }
 }

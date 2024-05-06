@@ -4,6 +4,7 @@ import com.project.blog.dto.PostRequestDto;
 import com.project.blog.dto.PostResponseDto;
 import com.project.blog.entity.Post;
 import com.project.blog.repository.PostRepository;
+import com.project.blog.security.UserDetailsImpl;
 import jakarta.persistence.EntityNotFoundException;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
@@ -18,8 +19,9 @@ public class PostService {
     private final PostRepository postRepository;
 
     // post 생성
-    public PostResponseDto createPost(PostRequestDto postRequestDto) {
-        Post post = new Post(postRequestDto);
+    public PostResponseDto createPost(PostRequestDto postRequestDto,
+                                      UserDetailsImpl userDetails) {
+        Post post = new Post(postRequestDto, userDetails);
 
         Post savePost = postRepository.save(post);
 
@@ -40,21 +42,28 @@ public class PostService {
 
     // post 수정
     @Transactional
-    public PostResponseDto updatePost(Long id, PostRequestDto postRequestDto) {
+    public PostResponseDto updatePost(Long id,
+                                      PostRequestDto postRequestDto,
+                                      UserDetailsImpl userDetails) {
         Post post = findPost(id);
 
-        post.checkPassword(postRequestDto.getPassword());
+        if (!post.getUsername().equals(userDetails.getUsername())) {
+            throw new IllegalArgumentException("수정 권한이 존재하지 않습니다.");
+        }
 
-        post.update(postRequestDto);
+        post.update(postRequestDto, userDetails);
 
         return new PostResponseDto(post);
     }
 
     // post 삭제
-    public void deletePost(Long id, PostRequestDto postRequestDto) {
+    public void deletePost(Long id,
+                           UserDetailsImpl userDetails) {
         Post post = findPost(id);
 
-        post.checkPassword(postRequestDto.getPassword());
+        if (!post.getUsername().equals(userDetails.getUsername())) {
+            throw new IllegalArgumentException("삭제 권한이 존재하지 않습니다.");
+        }
 
         postRepository.delete(post);
     }

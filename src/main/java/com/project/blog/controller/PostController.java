@@ -2,8 +2,12 @@ package com.project.blog.controller;
 
 import com.project.blog.dto.PostRequestDto;
 import com.project.blog.dto.PostResponseDto;
+import com.project.blog.security.UserDetailsImpl;
 import com.project.blog.service.PostService;
 import lombok.RequiredArgsConstructor;
+import org.apache.coyote.Response;
+import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -15,9 +19,10 @@ public class PostController {
     private final PostService postService;
 
     // post 생성
-    @PostMapping("/posts")
-    public PostResponseDto createPost(@RequestBody PostRequestDto postRequestDto) {
-        return postService.createPost(postRequestDto);
+    @PostMapping("/post")
+    public PostResponseDto createPost(@RequestBody PostRequestDto postRequestDto,
+                                      @AuthenticationPrincipal UserDetailsImpl userDetails) {
+        return postService.createPost(postRequestDto, userDetails);
     }
 
     // post 전체 조회
@@ -34,15 +39,18 @@ public class PostController {
 
     // post 수정
     @PutMapping("/post/{id}")
-    public PostResponseDto updatePost(@PathVariable Long id, @RequestBody PostRequestDto postRequestDto) {
-        return postService.updatePost(id, postRequestDto);
+    public PostResponseDto updatePost(@PathVariable Long id,
+                                      @RequestBody PostRequestDto postRequestDto,
+                                      @AuthenticationPrincipal UserDetailsImpl userDetails) {
+        return postService.updatePost(id, postRequestDto, userDetails);
     }
 
     // post 삭제
     @DeleteMapping("/post/{id}")
-    public PostResponseDto deletePost(@PathVariable Long id, @RequestBody PostRequestDto postRequestDto) {
-        postService.deletePost(id, postRequestDto);
+    public ResponseEntity<PostResponseDto> deletePost(@PathVariable Long id,
+                                     @AuthenticationPrincipal UserDetailsImpl userDetails) {
+        postService.deletePost(id, userDetails);
 
-        return new PostResponseDto(true);
+        return ResponseEntity.ok(new PostResponseDto(true));
     }
 }

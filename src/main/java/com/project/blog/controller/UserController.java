@@ -41,7 +41,7 @@ public class UserController {
 
         if (!fieldErrorList.isEmpty()) {
             for (FieldError fieldError : fieldErrorList) {
-                log.error(fieldError.getField() + " 필대 : " + fieldError.getDefaultMessage());
+                log.error(fieldError.getField() + " 필드 : " + fieldError.getDefaultMessage());
             }
 
             return "redirect:/api/user/signup";

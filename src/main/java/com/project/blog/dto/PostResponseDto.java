@@ -11,7 +11,7 @@ import java.time.LocalDateTime;
 public class PostResponseDto {
     private final Boolean result;
     private final Long id;
-    private final String userName;
+    private final String username;
     private final String title;
     private final String content;
     private final LocalDateTime createdAt;
@@ -19,7 +19,7 @@ public class PostResponseDto {
     public PostResponseDto(Post post) {
         this.result = null;
         this.id = post.getId();
-        this.userName = post.getUserName();
+        this.username = post.getUsername();
         this.title = post.getTitle();
         this.content = post.getContent();
         this.createdAt = post.getCreatedAt();
@@ -28,7 +28,7 @@ public class PostResponseDto {
     public PostResponseDto(Boolean result) {
         this.result = result;
         this.id = null;
-        this.userName = null;
+        this.username = null;
         this.title = null;
         this.content = null;
         this.createdAt = null;
