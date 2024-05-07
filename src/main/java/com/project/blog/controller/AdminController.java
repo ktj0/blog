@@ -21,18 +21,28 @@ public class AdminController {
     // 게시글 수정
     @Secured(UserRoleEnum.Authority.ADMIN)
     @PutMapping("/post/{id}")
-    public PostResponseDto updatePostByAdmin(@PathVariable Long id,
+    public ResponseEntity<ApiResponseDto> updatePostByAdmin(@PathVariable Long id,
                                              @RequestBody PostRequestDto requestDto) {
-        return adminService.updatePostByAdmin(id, requestDto);
+        try {
+            PostResponseDto result = adminService.updatePostByAdmin(id, requestDto);
+
+            return ResponseEntity.ok().body(result);
+        } catch (EntityNotFoundException e) {
+            return ResponseEntity.badRequest().body(new ApiResponseDto("게시글이 존재하지 않습니다.", HttpStatus.BAD_REQUEST.value()));
+        }
     }
 
     // 게시글 삭제
     @Secured(UserRoleEnum.Authority.ADMIN)
     @DeleteMapping("/post/{id}")
-    public ResponseEntity<PostResponseDto> deletePostByAdmin(@PathVariable Long id) {
-        adminService.deletePostByAdmin(id);
+    public ResponseEntity<ApiResponseDto> deletePostByAdmin(@PathVariable Long id) {
+        try {
+            adminService.deletePostByAdmin(id);
 
-        return ResponseEntity.ok(new PostResponseDto(true));
+            return ResponseEntity.ok().body(new ApiResponseDto("삭제 성공", HttpStatus.OK.value()));
+        } catch (EntityNotFoundException e) {
+            return ResponseEntity.badRequest().body(new ApiResponseDto("게시글이 존재하지 않습니다.", HttpStatus.BAD_REQUEST.value()));
+        }
     }
 
     // 댓글 수정

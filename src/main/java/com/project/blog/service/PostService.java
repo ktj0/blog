@@ -3,7 +3,6 @@ package com.project.blog.service;
 import com.project.blog.dto.PostRequestDto;
 import com.project.blog.dto.PostResponseDto;
 import com.project.blog.entity.Post;
-import com.project.blog.entity.User;
 import com.project.blog.repository.PostRepository;
 import com.project.blog.security.UserDetailsImpl;
 import jakarta.persistence.EntityNotFoundException;
@@ -21,8 +20,8 @@ public class PostService {
 
     // post 생성
     public PostResponseDto createPost(PostRequestDto postRequestDto,
-                                      String username) {
-        Post post = new Post(postRequestDto, username);
+                                      UserDetailsImpl userDetails) {
+        Post post = new Post(postRequestDto, userDetails);
 
         Post savePost = postRepository.save(post);
 
@@ -45,25 +44,24 @@ public class PostService {
     @Transactional
     public PostResponseDto updatePost(Long id,
                                       PostRequestDto postRequestDto,
-                                      User user) {
+                                      UserDetailsImpl userDetails) {
         Post post = findPost(id);
-        String username = user.getUsername();
 
-        if (!post.getUsername().equals(username)) {
+        if (!post.getUser().getUsername().equals(userDetails.getUsername())) {
             throw new IllegalArgumentException("수정 권한이 존재하지 않습니다.");
         }
 
-        post.update(postRequestDto, username);
+        post.update(postRequestDto);
 
         return new PostResponseDto(post);
     }
 
     // post 삭제
     public void deletePost(Long id,
-                           User user) {
+                           UserDetailsImpl userDetails) {
         Post post = findPost(id);
 
-        if (!post.getUsername().equals(user.getUsername())) {
+        if (!post.getUser().getUsername().equals(userDetails.getUsername())) {
             throw new IllegalArgumentException("삭제 권한이 존재하지 않습니다.");
         }
 

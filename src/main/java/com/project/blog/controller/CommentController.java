@@ -24,10 +24,16 @@ public class CommentController {
 
     // 댓글 작성
     @PostMapping("/{postId}/comment")
-    public CommentResponseDto createComment(@PathVariable Long postId,
+    public ResponseEntity<ApiResponseDto> createComment(@PathVariable Long postId,
                                             @RequestBody CommentRequestDto requestDto,
                                             @AuthenticationPrincipal UserDetailsImpl userDetails) {
-        return commentService.createComment(postId, requestDto, userDetails.getUser());
+        try {
+            CommentResponseDto result = commentService.createComment(postId, requestDto, userDetails.getUser());
+
+            return ResponseEntity.ok().body(result);
+        } catch (EntityNotFoundException e) {
+            return ResponseEntity.badRequest().body(new ApiResponseDto("게시글이 존재하지 않습니다.", HttpStatus.BAD_REQUEST.value()));
+        }
     }
 
     // 댓글 수정

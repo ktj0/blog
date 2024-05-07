@@ -1,24 +1,26 @@
 package com.project.blog.dto;
 
+import java.time.LocalDateTime;
+
+import com.project.blog.dto.ApiResponseDto;
 import com.project.blog.entity.Comment;
 import lombok.Getter;
 import lombok.Setter;
 
-import java.time.LocalDateTime;
-
 @Getter
 @Setter
 public class CommentResponseDto extends ApiResponseDto {
-    private final Long id;
-    private final String username;
-    private final String comment;
-    private final LocalDateTime createdAt;
+    private Long id;
+    private String comment;
+    private String username;
+    private LocalDateTime createdAt;
+    private LocalDateTime modifiedAt;
 
     public CommentResponseDto(Comment comment) {
-        super();
         this.id = comment.getId();
-        this.username = comment.getUser().getUsername();
         this.comment = comment.getComment();
+        this.username = comment.getUser().getUsername();
         this.createdAt = comment.getCreatedAt();
+        this.modifiedAt = comment.getModifiedAt();
     }
 }

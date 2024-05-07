@@ -16,6 +16,7 @@ import org.springframework.stereotype.Service;
 @Service
 @RequiredArgsConstructor
 public class AdminService {
+    private final PostService postService;
     private final PostRepository postRepository;
     private final CommentService commentService;
     private final CommentRepository commentRepository;
@@ -24,17 +25,16 @@ public class AdminService {
     @Transactional
     public PostResponseDto updatePostByAdmin(Long id,
                                              PostRequestDto requestDto) {
-        Post post = findPost(id);
-        String username = post.getUsername();
+        Post post = postService.findPost(id);
 
-        post.update(requestDto, username);
+        post.update(requestDto);
 
         return new PostResponseDto(post);
     }
 
     // 게시글 삭제
     public void deletePostByAdmin(Long id) {
-        Post post = findPost(id);
+        Post post = postService.findPost(id);
 
         postRepository.delete(post);
     }
@@ -55,12 +55,5 @@ public class AdminService {
         Comment comment = commentService.findComment(commentId);
 
         commentRepository.delete(comment);
-    }
-
-    // post 존재여부 확인
-    private Post findPost(Long id) {
-        return postRepository.findById(id).orElseThrow(() ->
-                new EntityNotFoundException("해당 게시글이 존재하지 않습니다.")
-        );
     }
 }
