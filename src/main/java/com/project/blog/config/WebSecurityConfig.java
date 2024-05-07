@@ -2,7 +2,6 @@ package com.project.blog.config;
 
 import com.project.blog.filter.JwtAuthenticationFilter;
 import com.project.blog.filter.JwtAuthorizationFilter;
-import com.project.blog.handler.AccessDeniedHandler;
 import com.project.blog.jwt.JwtUtil;
 import com.project.blog.security.UserDetailsServiceImpl;
 import jakarta.servlet.http.HttpServletResponse;

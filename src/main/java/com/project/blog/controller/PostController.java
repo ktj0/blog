@@ -22,7 +22,7 @@ public class PostController {
     @PostMapping("/post")
     public PostResponseDto createPost(@RequestBody PostRequestDto postRequestDto,
                                       @AuthenticationPrincipal UserDetailsImpl userDetails) {
-        return postService.createPost(postRequestDto, userDetails);
+        return postService.createPost(postRequestDto, userDetails.getUsername());
     }
 
     // post 전체 조회
@@ -42,14 +42,14 @@ public class PostController {
     public PostResponseDto updatePost(@PathVariable Long id,
                                       @RequestBody PostRequestDto postRequestDto,
                                       @AuthenticationPrincipal UserDetailsImpl userDetails) {
-        return postService.updatePost(id, postRequestDto, userDetails);
+        return postService.updatePost(id, postRequestDto, userDetails.getUser());
     }
 
     // post 삭제
     @DeleteMapping("/post/{id}")
     public ResponseEntity<PostResponseDto> deletePost(@PathVariable Long id,
                                      @AuthenticationPrincipal UserDetailsImpl userDetails) {
-        postService.deletePost(id, userDetails);
+        postService.deletePost(id, userDetails.getUser());
 
         return ResponseEntity.ok(new PostResponseDto(true));
     }

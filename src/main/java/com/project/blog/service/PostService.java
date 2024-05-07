@@ -3,6 +3,7 @@ package com.project.blog.service;
 import com.project.blog.dto.PostRequestDto;
 import com.project.blog.dto.PostResponseDto;
 import com.project.blog.entity.Post;
+import com.project.blog.entity.User;
 import com.project.blog.repository.PostRepository;
 import com.project.blog.security.UserDetailsImpl;
 import jakarta.persistence.EntityNotFoundException;
@@ -20,8 +21,8 @@ public class PostService {
 
     // post 생성
     public PostResponseDto createPost(PostRequestDto postRequestDto,
-                                      UserDetailsImpl userDetails) {
-        Post post = new Post(postRequestDto, userDetails);
+                                      String username) {
+        Post post = new Post(postRequestDto, username);
 
         Post savePost = postRepository.save(post);
 
@@ -44,9 +45,9 @@ public class PostService {
     @Transactional
     public PostResponseDto updatePost(Long id,
                                       PostRequestDto postRequestDto,
-                                      UserDetailsImpl userDetails) {
+                                      User user) {
         Post post = findPost(id);
-        String username = userDetails.getUsername();
+        String username = user.getUsername();
 
         if (!post.getUsername().equals(username)) {
             throw new IllegalArgumentException("수정 권한이 존재하지 않습니다.");
@@ -59,10 +60,10 @@ public class PostService {
 
     // post 삭제
     public void deletePost(Long id,
-                           UserDetailsImpl userDetails) {
+                           User user) {
         Post post = findPost(id);
 
-        if (!post.getUsername().equals(userDetails.getUsername())) {
+        if (!post.getUsername().equals(user.getUsername())) {
             throw new IllegalArgumentException("삭제 권한이 존재하지 않습니다.");
         }
 
@@ -70,7 +71,7 @@ public class PostService {
     }
 
     // post 존재여부 확인
-    private Post findPost(Long id) {
+    public Post findPost(Long id) {
         return postRepository.findById(id).orElseThrow(() ->
                 new EntityNotFoundException("해당 게시글이 존재하지 않습니다.")
         );
