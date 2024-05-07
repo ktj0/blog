@@ -7,6 +7,7 @@ import com.project.blog.entity.Post;
 import com.project.blog.entity.User;
 import com.project.blog.repository.CommentRepository;
 import com.project.blog.security.UserDetailsImpl;
+import jakarta.persistence.EntityNotFoundException;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -39,8 +40,6 @@ public class CommentService {
                                             User user) {
         Comment comment = findComment(commentId);
 
-        System.out.println();
-
         if (!comment.getUser().getUsername().equals(user.getUsername())) {
             throw new IllegalArgumentException("수정 권한이 존재하지 않습니다.");
         }
@@ -63,9 +62,9 @@ public class CommentService {
     }
 
     // 댓글 유무 확인
-    private Comment findComment(Long commentId) {
+    public Comment findComment(Long commentId) {
         return commentRepository.findById(commentId).orElseThrow(() ->
-                new NoSuchElementException("댓글이 존재하지 않습니다.")
+                new EntityNotFoundException("댓글이 존재하지 않습니다.")
         );
     }
 }

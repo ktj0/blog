@@ -5,6 +5,7 @@ import com.project.blog.dto.CommentRequestDto;
 import com.project.blog.dto.CommentResponseDto;
 import com.project.blog.security.UserDetailsImpl;
 import com.project.blog.service.CommentService;
+import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.apache.coyote.Response;
 import org.springframework.http.HttpStatus;
@@ -40,7 +41,7 @@ public class CommentController {
             return ResponseEntity.ok().body(result);
         } catch (IllegalArgumentException e) {
             return ResponseEntity.badRequest().body(new ApiResponseDto("수정 권한이 없습니다.", HttpStatus.BAD_REQUEST.value()));
-        } catch (NoSuchElementException e) {
+        } catch (EntityNotFoundException e) {
             return ResponseEntity.badRequest().body(new ApiResponseDto("댓글이 존재하지 않습니다.", HttpStatus.BAD_REQUEST.value()));
         }
     }
@@ -55,7 +56,7 @@ public class CommentController {
             return ResponseEntity.ok().body(new ApiResponseDto("삭제 성공", HttpStatus.OK.value()));
         } catch (IllegalArgumentException e) {
             return ResponseEntity.badRequest().body(new ApiResponseDto("삭제 권한이 없습니다.", HttpStatus.BAD_REQUEST.value()));
-        } catch (NoSuchElementException e) {
+        } catch (EntityNotFoundException e) {
             return ResponseEntity.badRequest().body(new ApiResponseDto("댓글이 존재하지 않습니다.", HttpStatus.BAD_REQUEST.value()));
         }
     }
