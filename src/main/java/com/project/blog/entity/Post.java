@@ -7,6 +7,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Entity
@@ -18,8 +19,10 @@ public class Post extends Timestamped {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+
     @Column(name = "title", nullable = false)
     private String title;
+
     @Column(name = "content", nullable = false)
     private String content;
 
@@ -28,7 +31,10 @@ public class Post extends Timestamped {
     private User user;
 
     @OneToMany(mappedBy = "post", cascade = CascadeType.REMOVE)
-    private List<Comment> comments;
+    private List<Comment> comments = new ArrayList<>();
+
+    @OneToMany(mappedBy = "post", cascade = CascadeType.REMOVE)
+    private List<PostLike> postLikes = new ArrayList<>();
 
     public Post(PostRequestDto postRequestPost, UserDetailsImpl userDetails) {
         this.title = postRequestPost.getTitle();

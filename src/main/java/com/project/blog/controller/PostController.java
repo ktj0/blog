@@ -1,11 +1,9 @@
 package com.project.blog.controller;
 
-import com.project.blog.dto.ApiResponseDto;
-import com.project.blog.dto.CommentResponseDto;
-import com.project.blog.dto.PostRequestDto;
-import com.project.blog.dto.PostResponseDto;
+import com.project.blog.dto.*;
 import com.project.blog.security.UserDetailsImpl;
 import com.project.blog.service.PostService;
+import com.sun.jdi.request.DuplicateRequestException;
 import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.apache.coyote.Response;
@@ -67,6 +65,36 @@ public class PostController {
             return ResponseEntity.ok().body(new ApiResponseDto("삭제 성공", HttpStatus.OK.value()));
         } catch (IllegalArgumentException e) {
             return ResponseEntity.badRequest().body(new ApiResponseDto("삭제 권한이 없습니다.", HttpStatus.BAD_REQUEST.value()));
+        } catch (EntityNotFoundException e) {
+            return ResponseEntity.badRequest().body(new ApiResponseDto("게시글이 존재하지 않습니다.", HttpStatus.BAD_REQUEST.value()));
+        }
+    }
+
+    // 게시글 좋아요
+    @PostMapping("/post/{id}/like")
+    public ResponseEntity<ApiResponseDto> likePost(@PathVariable Long id,
+                                                   @AuthenticationPrincipal UserDetailsImpl userDetails) {
+        try {
+            postService.likePost(id, userDetails);
+
+            return ResponseEntity.ok().body(new ApiResponseDto("좋아요", HttpStatus.OK.value()));
+        } catch (EntityNotFoundException e) {
+            return ResponseEntity.badRequest().body(new ApiResponseDto("게시글이 존재하지 않습니다.", HttpStatus.BAD_REQUEST.value()));
+        } catch (DuplicateRequestException e) {
+            return ResponseEntity.badRequest().body(new ApiResponseDto("이미 좋아요 한 게시글입니다.", HttpStatus.BAD_REQUEST.value()));
+        }
+    }
+
+    // 게시글 좋아요 취소
+    @DeleteMapping("/post/{id}/like")
+    public ResponseEntity<ApiResponseDto> deleteLikePost(@PathVariable Long id,
+                                                         @AuthenticationPrincipal UserDetailsImpl userDetails) {
+        try {
+            postService.deleteLikePost(id, userDetails);
+
+            return ResponseEntity.ok().body(new ApiResponseDto("좋아요 취소", HttpStatus.OK.value()));
+        } catch (IllegalArgumentException e) {
+            return ResponseEntity.badRequest().body(new ApiResponseDto("해당 게시글에 취소할 좋아요가 없습니다.", HttpStatus.BAD_REQUEST.value()));
         } catch (EntityNotFoundException e) {
             return ResponseEntity.badRequest().body(new ApiResponseDto("게시글이 존재하지 않습니다.", HttpStatus.BAD_REQUEST.value()));
         }
