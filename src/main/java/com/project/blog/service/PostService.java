@@ -75,30 +75,22 @@ public class PostService {
     }
 
     // 게시글 좋아요
-    public void likePost(Long id, UserDetailsImpl userDetails) {
+    public boolean likePost(Long id, UserDetailsImpl userDetails) {
         Post post = findPost(id);
         User user = userDetails.getUser();
 
-        if (postLikeRepository.existsByUserAndPost(user, post)) {
-            throw new DuplicateRequestException("이미 좋아요 한 게시글입니다.");
+        Optional<PostLike> optionalPostLike = postLikeRepository.findByUserAndPost(user, post);
+
+        if (optionalPostLike.isPresent()) {
+            postLikeRepository.delete(optionalPostLike.get());
+
+            return false;
         } else {
             PostLike postLike = new PostLike(user, post);
 
             postLikeRepository.save(postLike);
-        }
-    }
 
-    // 게시글 좋아요 취소
-    public void deleteLikePost(Long id, UserDetailsImpl userDetails) {
-        Post post = findPost(id);
-        User user = userDetails.getUser();
-
-        Optional<PostLike> postLike = postLikeRepository.findByUserAndPost(user, post);
-
-        if (postLike.isPresent()) {
-            postLikeRepository.delete(postLike.get());
-        } else {
-            throw new IllegalArgumentException("해당 게시글에 취소할 좋아요가 없습니다.");
+            return true;
         }
     }
 
